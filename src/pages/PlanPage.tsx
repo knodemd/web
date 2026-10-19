@@ -272,14 +272,14 @@ export default function PlanPage() {
         <Label>
           <span id="h-repos">Repositories</span>
         </Label>
-        {/* The SVG keeps a 48px margin and its own title for GitHub: crop both so the map spans the column */}
+        {/* The SVG carries its own title for GitHub: crop it, the section label already names it */}
         <a href={GH} className="block overflow-hidden">
           <picture>
             <source media="(prefers-color-scheme: dark)" srcSet={`${MAP}/map-dark.svg`} />
             <img
               src={`${MAP}/map-light.svg`}
               alt="The Knode repositories and how they depend on each other"
-              className="mt-[-7.62%] -mb-[4.571%] -ml-[4.571%] w-[109.143%] max-w-none"
+              className="mt-[-6.83%] w-full"
             />
           </picture>
         </a>
