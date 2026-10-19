@@ -81,8 +81,8 @@ export default function Footer() {
             <span>
               <span className="font-line text-[13px] tracking-[.02em] text-fg uppercase">
                 2026 Knode
-              </span>
-              , a project by{' '}
+              </span>{' '}
+              a project by{' '}
               <a href="https://aaangelmartin.com" className="link-sign">
                 aaangelmartin
               </a>
