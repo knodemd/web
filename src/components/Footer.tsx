@@ -78,7 +78,10 @@ export default function Footer() {
           <p className="m-0 inline-flex items-center gap-2">
             <Icon name="copyright" />
             <span>
-              2026 Knode, a project by{' '}
+              <span className="font-line text-[13px] tracking-[.02em] text-fg uppercase">
+                2026 Knode
+              </span>
+              , a project by{' '}
               <a href="https://aaangelmartin.com" className="link-sign">
                 aaangelmartin
               </a>
