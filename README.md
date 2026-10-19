@@ -27,20 +27,11 @@ npm run build     # type-check, build and prerender into dist/
 npm run preview   # serve dist/
 ```
 
-## Deploy
+## Contributing
 
-Merging into `main` runs `.github/workflows/deploy.yml`, which builds the site and publishes `dist/`
-to GitHub Pages (Settings, Pages, Source: GitHub Actions).
-
-DNS for `knode.md` lives in Cloudflare, set to *DNS only* (grey cloud) so GitHub can issue the certificate:
-
-| Type | Name | Content |
-|---|---|---|
-| A | `@` | 185.199.108.153 |
-| A | `@` | 185.199.109.153 |
-| A | `@` | 185.199.110.153 |
-| A | `@` | 185.199.111.153 |
-| CNAME | `www` | knodemd.github.io |
+Found something wrong or want to suggest a change? [Open an issue](https://github.com/knodemd/web/issues/new/choose)
+or a pull request. Read the [contributing guide](https://github.com/knodemd/.github/blob/main/CONTRIBUTING.md) first.
+Merging into `main` publishes the site.
 
 ## Licence
 
