@@ -75,13 +75,17 @@ export default function Footer() {
       </div>
       <div className="border-t border-line">
         <div className="mx-auto flex max-w-[1120px] flex-wrap items-center justify-between gap-x-8 gap-y-3 px-6 py-6 pb-[max(24px,env(safe-area-inset-bottom))] text-sm text-muted">
-          <p className="m-0">
-            © 2026 Knode, a project by{' '}
-            <a href="https://aaangelmartin.com" className="link-sign">
-              aaangelmartin
-            </a>
+          <p className="m-0 inline-flex items-center gap-2">
+            <Icon name="copyright" />
+            <span>
+              2026 Knode, a project by{' '}
+              <a href="https://aaangelmartin.com" className="link-sign">
+                aaangelmartin
+              </a>
+            </span>
           </p>
-          <a href="/licenses" className="link-nav">
+          <a href="/licenses" className="link-nav inline-flex items-center gap-2">
+            <Icon name="license" />
             Licenses
           </a>
           <a
