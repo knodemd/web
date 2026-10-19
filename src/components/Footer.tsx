@@ -39,8 +39,8 @@ const columns: { title: string; links: { label: string; href: string; icon: Icon
 export default function Footer() {
   return (
     <footer className="mt-[clamp(80px,12vw,140px)] border-t border-line">
-      <div className="mx-auto grid max-w-[1120px] grid-cols-2 gap-x-6 gap-y-12 px-6 pt-14 pb-12 md:grid-cols-[minmax(0,1.3fr)_repeat(3,minmax(0,1fr))]">
-        <div className="col-span-2 flex flex-col items-start gap-4 md:col-span-1">
+      <div className="mx-auto flex max-w-[1120px] flex-col justify-between gap-12 px-6 pt-14 pb-12 md:flex-row">
+        <div className="flex flex-col items-start gap-4">
           <a href="/" aria-label="Knode, home" className="text-fg">
             <Logo className="h-5" />
           </a>
@@ -49,23 +49,28 @@ export default function Footer() {
             yours.
           </p>
         </div>
-        {columns.map((col) => (
-          <nav key={col.title} aria-label={col.title}>
-            <p className="m-0 mb-4 font-line text-[13px] leading-none text-accent uppercase">
-              {col.title}
-            </p>
-            <ul className="m-0 flex list-none flex-col gap-3 p-0">
-              {col.links.map((l) => (
-                <li key={l.label}>
-                  <a href={l.href} className="link-nav inline-flex items-center gap-2 text-[15px]">
-                    <Icon name={l.icon} />
-                    {l.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        ))}
+        <div className="grid grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3 sm:gap-x-14">
+          {columns.map((col) => (
+            <nav key={col.title} aria-label={col.title}>
+              <p className="m-0 mb-4 font-line text-[13px] leading-none text-accent uppercase">
+                {col.title}
+              </p>
+              <ul className="m-0 flex list-none flex-col gap-3 p-0">
+                {col.links.map((l) => (
+                  <li key={l.label}>
+                    <a
+                      href={l.href}
+                      className="link-nav inline-flex items-center gap-2 text-[15px]"
+                    >
+                      <Icon name={l.icon} />
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
+        </div>
       </div>
       <div className="border-t border-line">
         <div className="mx-auto flex max-w-[1120px] flex-wrap items-center justify-between gap-x-8 gap-y-3 px-6 py-6 pb-[max(24px,env(safe-area-inset-bottom))] text-sm text-muted">
