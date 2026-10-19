@@ -25,6 +25,11 @@ const principles: { icon: IconName; title: string; text: React.ReactNode }[] = [
     title: 'Native',
     text: "Built for Mac first, then iPhone and iPad, with each platform's own tools. Works offline.",
   },
+  {
+    icon: 'note',
+    title: 'Markdown',
+    text: 'Every node is Markdown. Your agents read it as it is, and any space can live as a folder of .md files too.',
+  },
 ]
 
 const repos = [
@@ -84,7 +89,7 @@ export default function HomePage() {
         >
           What we're building
         </h2>
-        <ul className="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] gap-4 p-0">
+        <ul className="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(min(100%,240px),1fr))] gap-4 p-0">
           {principles.map((p) => (
             <li key={p.title} className="rounded-[18px] border border-line bg-panel p-7">
               <span className="text-accent">

@@ -26,7 +26,7 @@ const pillars: { icon: IconName; title: string; text: string }[] = [
   {
     icon: 'file',
     title: 'Local and open',
-    text: 'Your files, on your Mac, in an open format. No AI inside the app: the agent is the AI.',
+    text: 'Your files, on your Mac, in an open format. Every node is Markdown. No AI inside the app: the agent is the AI.',
   },
 ]
 
@@ -49,7 +49,7 @@ const versions: { v: string; title: string; text: string; now?: boolean }[] = [
   {
     v: 'v0.2',
     title: 'Spaces',
-    text: 'Several spaces, permissions per agent, every agent, Markdown in and out.',
+    text: 'Several spaces, permissions per agent, every agent, a live Markdown folder.',
   },
   {
     v: 'v0.3',
@@ -234,8 +234,8 @@ export default function PlanPage() {
                 <Icon name="import" />
               </span>
               <span>
-                <b className="font-semibold text-fg">Markdown in and out,</b> for Obsidian, git and
-                anything else.
+                <b className="font-semibold text-fg">Every node is Markdown,</b> and a space can
+                also live as a folder of .md files for Obsidian, git and anything else.
               </span>
             </li>
           </ul>
