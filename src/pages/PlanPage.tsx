@@ -289,7 +289,7 @@ export default function PlanPage() {
         <Label>
           <span id="h-roadmap">Roadmap</span>
         </Label>
-        <ol className="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(min(100%,170px),1fr))] gap-3 p-0">
+        <ol className="m-0 grid list-none grid-cols-1 gap-3 p-0 min-[480px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
           {versions.map((v) => (
             <li
               key={v.v}
@@ -302,13 +302,19 @@ export default function PlanPage() {
           ))}
         </ol>
         <p className="mt-6 mb-0 flex flex-wrap gap-x-6 gap-y-2 text-[15px] text-muted">
-          <a href={PROJECT} className="link-text">
+          <a href={PROJECT} className="link-text inline-flex items-center gap-2">
+            <Icon name="map" />
             Every issue, by version
           </a>
-          <a href="/handbook/roadmap" className="link-text">
+          <a href="/handbook/roadmap" className="link-text inline-flex items-center gap-2">
+            <Icon name="note" />
             What each version contains
           </a>
-          <a href="/handbook/decisions/0005-architecture" className="link-text">
+          <a
+            href="/handbook/decisions/0005-architecture"
+            className="link-text inline-flex items-center gap-2"
+          >
+            <Icon name="file" />
             Why it is built this way
           </a>
         </p>
