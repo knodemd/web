@@ -17,8 +17,8 @@ const columns: { title: string; links: { label: string; href: string; icon: Icon
     title: 'Project',
     links: [
       { label: 'GitHub', href: GH, icon: 'github' },
-      { label: 'Handbook', href: `${GH}/handbook`, icon: 'note' },
-      { label: 'Roadmap', href: `${GH}/handbook/blob/main/06-roadmap.md`, icon: 'map' },
+      { label: 'Handbook', href: '/handbook', icon: 'note' },
+      { label: 'Roadmap', href: '/handbook/roadmap', icon: 'map' },
       { label: 'Brand', href: '/brand', icon: 'knode' },
     ],
   },

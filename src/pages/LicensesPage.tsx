@@ -131,10 +131,7 @@ export default function LicensesPage() {
           </p>
           <p className="m-0">
             Why we chose these licenses:{' '}
-            <a
-              href="https://github.com/knodemd/handbook/blob/main/decisions/0003-licences.md"
-              className="link-text"
-            >
+            <a href="/handbook/decisions/0003-licences" className="link-text">
               read it in the handbook
             </a>
             .
