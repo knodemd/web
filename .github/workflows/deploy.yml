@@ -3,7 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-  # the handbook pages are built from knodemd/handbook, so rebuild daily and on demand
+  # the handbook and docs pages are built from knodemd/handbook and knodemd/docs, so rebuild
+  # daily and on demand
   schedule:
     - cron: "23 5 * * *"
   workflow_dispatch:

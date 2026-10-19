@@ -4,11 +4,12 @@
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
-    "dev": "node scripts/handbook.mjs && vite",
-    "build": "node scripts/handbook.mjs && tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
+    "dev": "node scripts/handbook.mjs && node scripts/docs.mjs && vite",
+    "build": "node scripts/handbook.mjs && node scripts/docs.mjs && tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "handbook": "node scripts/handbook.mjs"
+    "handbook": "node scripts/handbook.mjs",
+    "docs": "node scripts/docs.mjs"
   },
   "dependencies": {
     "react": "19.2.5",

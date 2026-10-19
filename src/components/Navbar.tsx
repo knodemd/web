@@ -31,6 +31,13 @@ export default function Navbar() {
             Developers
           </a>
           <a
+            href="/docs"
+            className="inline-flex items-center gap-2 link-nav text-[15px] font-medium"
+          >
+            <Icon name="info" />
+            Docs
+          </a>
+          <a
             href="/handbook"
             className="inline-flex items-center gap-2 link-nav text-[15px] font-medium"
           >

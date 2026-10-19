@@ -5,3 +5,5 @@ dist-ssr
 .DS_Store
 .handbook
 src/content/handbook.json
+.docs
+src/content/docs.json
