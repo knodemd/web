@@ -84,12 +84,16 @@ with open(sys.argv[2], "w") as f:
     f.write(str(server.server_port))
 server.serve_forever()
 PY
-python3 "$work/server.py" "$work" "$work/port" &
+python3 "$work/server.py" "$work" "$work/port" 2> "$work/server.log" &
 server_pid=$!
 i=0
 while [ ! -s "$work/port" ]; do
   i=$((i + 1))
-  [ "$i" -lt 50 ] || { echo "the test server did not start"; exit 1; }
+  if [ "$i" -gt 300 ] || ! kill -0 "$server_pid" 2>/dev/null; then
+    echo "the test server did not start"
+    cat "$work/server.log"
+    exit 1
+  fi
   sleep 0.1
 done
 releases="http://127.0.0.1:$(cat "$work/port")/releases"
