@@ -66,7 +66,7 @@ code, .mono { font-family: "Geist Mono", ui-monospace, monospace; font-size: .9e
 .brand svg { height: 26px; width: auto; }
 .brand .mark { fill: var(--mark); }
 .top nav, .foot nav { display: flex; gap: 28px; }
-.top nav a, .foot nav a { text-decoration: none; color: var(--muted); font-weight: 500; font-size: 15px; }
+.top nav a, .foot nav a { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--muted); font-weight: 500; font-size: 15px; }
 .top nav a:hover, .foot nav a:hover { color: var(--fg); }
 
 /* hero */
@@ -114,7 +114,9 @@ code, .mono { font-family: "Geist Mono", ui-monospace, monospace; font-size: .9e
 .statement { max-width: 24em; margin: 0; font-size: clamp(24px, 3.4vw, 36px); line-height: 1.25; font-weight: 500; letter-spacing: -.01em; text-wrap: balance; }
 .repos { list-style: none; margin: 40px 0 0; padding: 0; border-top: 1px solid var(--line); }
 .repos a { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding: 20px 0; border-bottom: 1px solid var(--line); text-decoration: none; }
-.repos .repo { font-family: "Geist Mono", ui-monospace, monospace; font-weight: 500; }
+.nav-ic { width: 14px; height: 14px; flex: none; }
+.repo-ic { width: 14px; height: 14px; flex: none; color: var(--muted); }
+.repos .repo { display: inline-flex; align-items: center; gap: 10px; font-family: "Geist Mono", ui-monospace, monospace; font-weight: 500; }
 .repos .what { color: var(--muted); }
 .repos a:hover .repo { color: var(--indigo); }
 @media (prefers-color-scheme: light) { .repos a:hover .repo { color: var(--fg); text-decoration: underline; text-decoration-color: var(--indigo); text-underline-offset: 4px; } }
