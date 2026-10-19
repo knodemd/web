@@ -17,6 +17,7 @@ come from [knodemd/brand](https://github.com/knodemd/brand).
 | `src/index.css` | Tailwind, the three inks and both themes |
 | `scripts/prerender.mjs` | Writes `index.html` and `404.html` as real HTML after the build |
 | `public/` | Fonts, favicons, link preview, `CNAME`, `robots.txt`, `sitemap.xml` |
+| `public/install.sh` | The installer served at `https://knode.md/install.sh`, tested by `sh scripts/test-install.sh` |
 
 ## Run it locally
 
