@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/knodemd/brand/main/09%20Banners/Repository%20Previews/PNG/repo-preview-web.png" alt="Knode web" width="100%">
+<img src="https://raw.githubusercontent.com/knodemd/brand/main/09%20Banners/README%20Headers/PNG/readme-web.png" alt="Knode web" width="100%">
 
 # knode.md
 
