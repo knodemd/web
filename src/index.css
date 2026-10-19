@@ -104,7 +104,7 @@ body {
 /* Links come in three kinds:
    .link-text  inside running text: brighter and medium weight, indigo on hover
    .link-nav   navigation, footer and lists: muted, indigo on hover
-   .link-sign  the author's name in the footer: like the text around it, brighter on hover
+   .link-sign  the author's name in the footer: like the text around it, indigo on hover
    On paper indigo is never text, so indigo states there turn ink. */
 .link-text {
   color: var(--fg);
@@ -129,11 +129,12 @@ body {
   transition: color 0.15s;
 }
 .link-sign:hover {
-  color: var(--fg);
+  color: var(--color-indigo);
 }
 @media (prefers-color-scheme: light) {
   .link-text:hover,
-  .link-nav:hover {
+  .link-nav:hover,
+  .link-sign:hover {
     color: var(--fg);
     text-decoration: underline;
     text-decoration-color: var(--color-indigo);

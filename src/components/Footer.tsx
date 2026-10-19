@@ -78,12 +78,13 @@ export default function Footer() {
           <a href="/licenses" className="link-nav">
             Licenses
           </a>
-          <p className="m-0 inline-flex items-center gap-2 font-mono text-[13px]">
+          <a
+            href="mailto:oss@knode.md"
+            className="link-nav inline-flex items-center gap-2 font-mono text-[13px]"
+          >
             <Icon name="mail" />
-            <a href="mailto:oss@knode.md" className="link-nav">
-              oss@knode.md
-            </a>
-          </p>
+            oss@knode.md
+          </a>
         </div>
       </div>
     </footer>
