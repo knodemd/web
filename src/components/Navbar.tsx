@@ -18,11 +18,11 @@ export default function Navbar() {
         scrolled ? 'border-line' : 'border-transparent'
       }`}
     >
-      <div className="mx-auto flex h-[72px] max-w-[1120px] items-center justify-between gap-6 px-6">
+      <div className="mx-auto flex h-[72px] max-w-[1120px] items-center justify-between gap-4 px-6">
         <a href="/" aria-label="Knode, home" className="text-fg">
           <Logo className="h-[22px] sm:h-[26px]" />
         </a>
-        <nav aria-label="Main" className="flex items-center gap-5 sm:gap-7">
+        <nav aria-label="Main" className="flex items-center gap-4 min-[480px]:gap-5 sm:gap-7">
           <a
             href="/developers"
             className="hidden items-center gap-2 link-nav text-[15px] font-medium sm:inline-flex"
@@ -40,23 +40,26 @@ export default function Navbar() {
           <a
             href="/docs"
             className="inline-flex items-center gap-2 link-nav text-[15px] font-medium"
+            aria-label="Docs"
           >
             <Icon name="info" />
-            Docs
+            <span className="hidden min-[480px]:inline">Docs</span>
           </a>
           <a
             href="/handbook"
             className="inline-flex items-center gap-2 link-nav text-[15px] font-medium"
+            aria-label="Handbook"
           >
             <Icon name="note" />
-            Handbook
+            <span className="hidden min-[480px]:inline">Handbook</span>
           </a>
           <a
             href="https://github.com/knodemd"
             className="inline-flex items-center gap-2 link-nav text-[15px] font-medium"
+            aria-label="GitHub"
           >
             <Icon name="github" />
-            GitHub
+            <span className="hidden min-[480px]:inline">GitHub</span>
           </a>
         </nav>
       </div>
