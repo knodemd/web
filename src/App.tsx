@@ -4,6 +4,7 @@ import DevelopersPage from '@/pages/DevelopersPage'
 import DocsPage from '@/pages/DocsPage'
 import HandbookPage from '@/pages/HandbookPage'
 import HomePage from '@/pages/HomePage'
+import InstallPage from '@/pages/InstallPage'
 import LicensesPage from '@/pages/LicensesPage'
 import PlanPage from '@/pages/PlanPage'
 import { docsPages } from '@/content/docs'
@@ -16,6 +17,7 @@ export type Page =
   | 'home'
   | 'brand'
   | 'developers'
+  | 'install'
   | 'licenses'
   | 'plan'
   | 'not-found'
@@ -28,6 +30,7 @@ const routes: Record<string, Page> = {
   '/': 'home',
   '/brand': 'brand',
   '/developers': 'developers',
+  '/install': 'install',
   '/licenses': 'licenses',
   '/plan': 'plan',
 }
@@ -61,6 +64,8 @@ export default function App({ page }: { page: Page }) {
         <BrandPage />
       ) : page === 'developers' ? (
         <DevelopersPage />
+      ) : page === 'install' ? (
+        <InstallPage />
       ) : page === 'plan' ? (
         <PlanPage />
       ) : page === 'licenses' ? (

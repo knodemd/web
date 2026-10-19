@@ -33,6 +33,13 @@ const pages = [
       'The .knode format, a library to read it, a CLI and an MCP server. Designed in public.',
   },
   {
+    page: 'install',
+    file: 'install/index.html',
+    title: 'Install - Knode',
+    description:
+      'Install the knode command and the Mac app, and connect your AI agents. Coming with v0.1.',
+  },
+  {
     page: 'plan',
     file: 'plan/index.html',
     title: 'The plan - Knode',
