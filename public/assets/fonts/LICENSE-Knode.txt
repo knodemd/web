@@ -1,0 +1,7 @@
+Knode Block and Knode Line
+Copyright 2026 Knode. All rights reserved.
+Knode is a project by aaangelmartin (https://aaangelmartin.com).
+
+These typefaces are not open source. They are served here for knode.md only.
+You may use them only as the Knode Brand License permits:
+https://github.com/knodemd/brand-license
