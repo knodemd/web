@@ -54,6 +54,10 @@ export default function DevelopersPage() {
             <Icon name="github" />
             Follow on GitHub
           </Button>
+          <Button href="/install">
+            <Icon name="import" />
+            How to install
+          </Button>
           <Button href="/docs">
             <Icon name="info" />
             Read the docs

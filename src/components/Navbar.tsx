@@ -31,6 +31,13 @@ export default function Navbar() {
             Developers
           </a>
           <a
+            href="/install"
+            className="hidden items-center gap-2 link-nav text-[15px] font-medium md:inline-flex"
+          >
+            <Icon name="import" />
+            Install
+          </a>
+          <a
             href="/docs"
             className="inline-flex items-center gap-2 link-nav text-[15px] font-medium"
           >

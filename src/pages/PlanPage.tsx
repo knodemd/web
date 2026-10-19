@@ -94,6 +94,10 @@ export default function PlanPage() {
             <Icon name="map" />
             Follow the roadmap
           </Button>
+          <Button href="/install">
+            <Icon name="import" />
+            How to install
+          </Button>
           <Button href="/handbook">
             <Icon name="note" />
             Read the handbook
