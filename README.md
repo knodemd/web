@@ -2,31 +2,33 @@
 
 The Knode website, served by GitHub Pages at [knode.md](https://knode.md).
 
-A single static page: hand-written HTML and CSS, no build step, no framework, no trackers and no
-third-party requests. Fonts (Knode Block, Knode Line, Geist, Geist Mono), icons, favicons and the
-link preview come from [knodemd/brand](https://github.com/knodemd/brand).
+Vite, React, TypeScript and Tailwind, the same stack as the rest of our sites. Every page is
+prerendered at build time, so it reads without JavaScript. No trackers and no third-party requests:
+fonts (Knode Block, Knode Line, Geist, Geist Mono), icons and favicons are served from this site and
+come from [knodemd/brand](https://github.com/knodemd/brand).
 
 | Path | What |
 |---|---|
-| `index.html` | The landing page |
-| `404.html` | Page not found |
-| `assets/css/site.css` | All styles: three inks, dark and light themes |
-| `assets/fonts/` | Self-hosted WOFF2 fonts (SIL Open Font License, see `OFL-*.txt`) |
-| `assets/img/` | Brand graphics |
-| `CNAME` | The custom domain, `knode.md` |
-| favicons, `site.webmanifest`, `og-image.png`, `robots.txt`, `sitemap.xml` | Browser and search metadata |
+| `src/pages/` | The landing page and the 404 |
+| `src/components/` | Navbar (sticky), footer, buttons, icons, logo |
+| `src/brand/` | Icon and logo data copied from the brand kit |
+| `src/index.css` | Tailwind, the three inks and both themes |
+| `scripts/prerender.mjs` | Writes `index.html` and `404.html` as real HTML after the build |
+| `public/` | Fonts, favicons, link preview, `CNAME`, `robots.txt`, `sitemap.xml` |
 
 ## Run it locally
 
 ```sh
-python3 -m http.server 8000
+npm install
+npm run dev       # http://localhost:5173
+npm run build     # type-check, build and prerender into dist/
+npm run preview   # serve dist/
 ```
-
-Then open http://localhost:8000.
 
 ## Deploy
 
-Merging into `main` publishes the site (Settings → Pages → Deploy from branch `main`, folder `/`).
+Merging into `main` runs `.github/workflows/deploy.yml`, which builds the site and publishes `dist/`
+to GitHub Pages (Settings, Pages, Source: GitHub Actions).
 
 DNS for `knode.md` lives in Cloudflare, set to *DNS only* (grey cloud) so GitHub can issue the certificate:
 
@@ -36,12 +38,10 @@ DNS for `knode.md` lives in Cloudflare, set to *DNS only* (grey cloud) so GitHub
 | A | `@` | 185.199.109.153 |
 | A | `@` | 185.199.110.153 |
 | A | `@` | 185.199.111.153 |
-| AAAA | `@` | 2606:50c0:8000::153 |
-| AAAA | `@` | 2606:50c0:8001::153 |
-| AAAA | `@` | 2606:50c0:8002::153 |
-| AAAA | `@` | 2606:50c0:8003::153 |
 | CNAME | `www` | knodemd.github.io |
 
 ## Licence
 
-Code under the [MIT licence](LICENSE). Brand assets follow the licences in [knodemd/brand](https://github.com/knodemd/brand).
+Code under [Apache 2.0](LICENSE). The brand (name, logo, icons, favicons and the Knode typefaces) is
+reserved under the Knode Brand Licence in
+[knodemd/brand](https://github.com/knodemd/brand).

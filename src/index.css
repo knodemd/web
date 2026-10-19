@@ -1,0 +1,148 @@
+@import 'tailwindcss';
+
+/* Knode, knode.md. Three inks, two in-house typefaces, one rule: square cells,
+   every corner rounded by half a cell. Fonts are served from this site, so
+   loading a page sends the visitor's address to no one else. */
+@font-face {
+  font-family: 'Knode Block';
+  font-display: swap;
+  src: url('/assets/fonts/KnodeBlock.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Knode Line';
+  font-display: swap;
+  src: url('/assets/fonts/KnodeLine.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Geist';
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/assets/fonts/Geist.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Geist Mono';
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/assets/fonts/GeistMono.woff2') format('woff2');
+}
+
+/* On paper the symbol and accents are ink: indigo is never small on paper. */
+:root {
+  --bg: #0b0b14;
+  --fg: #f3f2ee;
+  --muted: #a3a2ba;
+  --line: #24243b;
+  --panel: #11111c;
+  --mark: #818cf8;
+  --accent: #818cf8;
+  --on-accent: #0b0b14;
+  --field-opacity: 0.12;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f3f2ee;
+    --fg: #0b0b14;
+    --muted: #5e5d73;
+    --line: #dad8e2;
+    --panel: #ffffff;
+    --mark: #0b0b14;
+    --accent: #0b0b14;
+    --on-accent: #f3f2ee;
+    --field-opacity: 0.22;
+    color-scheme: light;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-panel: var(--panel);
+  --color-mark: var(--mark);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-ink: #0b0b14;
+  --color-paper: #f3f2ee;
+  --color-indigo: #818cf8;
+  --font-sans: 'Geist', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, Menlo, monospace;
+  --font-block: 'Knode Block', monospace;
+  --font-line: 'Knode Line', monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 17px/1.6 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* "Naturally." is indigo on ink; on paper it is ink over an indigo band. */
+.highlight {
+  color: var(--color-indigo);
+}
+@media (prefers-color-scheme: light) {
+  .highlight {
+    color: var(--fg);
+    background: linear-gradient(transparent 62%, var(--color-indigo) 62%);
+  }
+}
+
+/* Links come in three kinds:
+   .link-text  inside running text: brighter and medium weight, indigo on hover
+   .link-nav   navigation, footer and lists: muted, indigo on hover
+   .link-sign  the author's name in the footer: like the text around it, brighter on hover
+   On paper indigo is never text, so indigo states there turn ink. */
+.link-text {
+  color: var(--fg);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.link-text:hover {
+  color: var(--color-indigo);
+}
+.link-nav {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.link-nav:hover {
+  color: var(--color-indigo);
+}
+.link-sign {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.link-sign:hover {
+  color: var(--fg);
+}
+@media (prefers-color-scheme: light) {
+  .link-text:hover,
+  .link-nav:hover {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--color-indigo);
+    text-underline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
