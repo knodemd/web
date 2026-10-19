@@ -11,6 +11,7 @@ const columns: { title: string; links: { label: string; href: string; icon: Icon
       { label: "What we're building", href: '/#what', icon: 'node' },
       { label: 'Built in public', href: '/#public', icon: 'people' },
       { label: 'The plan', href: '/plan', icon: 'map' },
+      { label: 'Install', href: '/install', icon: 'import' },
       { label: 'Developers', href: '/developers', icon: 'terminal' },
     ],
   },
