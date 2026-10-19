@@ -8,6 +8,10 @@ const handbook = JSON.parse(
   readFileSync(path.resolve(import.meta.dirname, '../src/content/handbook.json'), 'utf8'),
 )
 
+const docs = JSON.parse(
+  readFileSync(path.resolve(import.meta.dirname, '../src/content/docs.json'), 'utf8'),
+)
+
 const dist = path.resolve(import.meta.dirname, '../dist')
 const ssr = path.resolve(import.meta.dirname, '../dist-ssr')
 const { render } = await import(path.join(ssr, 'entry-server.js'))
@@ -47,6 +51,12 @@ const pages = [
     file: p.slug ? `handbook/${p.slug}/index.html` : 'handbook/index.html',
     title: p.slug ? `${p.title} - Knode Handbook` : 'Handbook - Knode',
     description: p.summary || 'How Knode works and how we build it in public.',
+  })),
+  ...docs.pages.map((p) => ({
+    page: p.slug ? `docs/${p.slug}` : 'docs',
+    file: p.slug ? `docs/${p.slug}/index.html` : 'docs/index.html',
+    title: p.slug ? `${p.title} - Knode Docs` : 'Docs - Knode',
+    description: p.summary || 'How to install and use Knode.',
   })),
   {
     page: 'not-found',

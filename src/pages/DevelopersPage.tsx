@@ -54,6 +54,10 @@ export default function DevelopersPage() {
             <Icon name="github" />
             Follow on GitHub
           </Button>
+          <Button href="/docs">
+            <Icon name="info" />
+            Read the docs
+          </Button>
           <Button href={'/handbook/roadmap'}>
             <Icon name="map" />
             Read the roadmap
