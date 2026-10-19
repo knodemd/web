@@ -4,11 +4,19 @@ import DevelopersPage from '@/pages/DevelopersPage'
 import HandbookPage from '@/pages/HandbookPage'
 import HomePage from '@/pages/HomePage'
 import LicensesPage from '@/pages/LicensesPage'
+import PlanPage from '@/pages/PlanPage'
 import { handbookPages } from '@/content/handbook'
 import NotFoundPage from '@/pages/NotFoundPage'
 
 // A handbook page is 'handbook' plus its slug: 'handbook', 'handbook/roadmap', 'handbook/decisions/0003-licences'
-export type Page = 'home' | 'brand' | 'developers' | 'licenses' | 'not-found' | `handbook${string}`
+export type Page =
+  | 'home'
+  | 'brand'
+  | 'developers'
+  | 'licenses'
+  | 'plan'
+  | 'not-found'
+  | `handbook${string}`
 
 const routes: Record<string, Page> = {
   '/handbook': 'handbook',
@@ -16,6 +24,7 @@ const routes: Record<string, Page> = {
   '/brand': 'brand',
   '/developers': 'developers',
   '/licenses': 'licenses',
+  '/plan': 'plan',
 }
 
 export const handbookRoutes: Page[] = handbookPages.map((p) =>
@@ -40,6 +49,8 @@ export default function App({ page }: { page: Page }) {
         <BrandPage />
       ) : page === 'developers' ? (
         <DevelopersPage />
+      ) : page === 'plan' ? (
+        <PlanPage />
       ) : page === 'licenses' ? (
         <LicensesPage />
       ) : (

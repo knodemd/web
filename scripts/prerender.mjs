@@ -29,6 +29,13 @@ const pages = [
       'The .knode format, a library to read it, a CLI and an MCP server. Designed in public.',
   },
   {
+    page: 'plan',
+    file: 'plan/index.html',
+    title: 'The plan - Knode',
+    description:
+      'Your second brain for AI: what Knode is, how it works, the .knode file, sync, the repositories and the roadmap.',
+  },
+  {
     page: 'licenses',
     file: 'licenses/index.html',
     title: 'Licenses - Knode',
