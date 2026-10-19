@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://knode.md/sitemap.xml
