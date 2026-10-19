@@ -31,7 +31,7 @@ export default function Navbar() {
             Developers
           </a>
           <a
-            href="https://github.com/knodemd/handbook"
+            href="/handbook"
             className="inline-flex items-center gap-2 link-nav text-[15px] font-medium"
           >
             <Icon name="note" />

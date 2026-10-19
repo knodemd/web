@@ -4,6 +4,10 @@
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
+const handbook = JSON.parse(
+  readFileSync(path.resolve(import.meta.dirname, '../src/content/handbook.json'), 'utf8'),
+)
+
 const dist = path.resolve(import.meta.dirname, '../dist')
 const ssr = path.resolve(import.meta.dirname, '../dist-ssr')
 const { render } = await import(path.join(ssr, 'entry-server.js'))
@@ -31,6 +35,12 @@ const pages = [
     description:
       'Knode is open source under Apache 2.0. Its name and logo are reserved under the Knode Brand License.',
   },
+  ...handbook.pages.map((p) => ({
+    page: p.slug ? `handbook/${p.slug}` : 'handbook',
+    file: p.slug ? `handbook/${p.slug}/index.html` : 'handbook/index.html',
+    title: p.slug ? `${p.title} - Knode Handbook` : 'Handbook - Knode',
+    description: p.summary || 'How Knode works and how we build it in public.',
+  })),
   {
     page: 'not-found',
     file: '404.html',
@@ -51,4 +61,4 @@ for (const { page, file, title, description } of pages) {
   writeFileSync(path.join(dist, file), html)
 }
 rmSync(ssr, { recursive: true, force: true })
-console.log('prerendered', pages.map((p) => p.file).join(', '))
+console.log(`prerendered ${pages.length} pages`)

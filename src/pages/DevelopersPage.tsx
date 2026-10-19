@@ -54,7 +54,7 @@ export default function DevelopersPage() {
             <Icon name="github" />
             Follow on GitHub
           </Button>
-          <Button href={`${GH}/handbook/blob/main/06-roadmap.md`}>
+          <Button href={'/handbook/roadmap'}>
             <Icon name="map" />
             Read the roadmap
           </Button>

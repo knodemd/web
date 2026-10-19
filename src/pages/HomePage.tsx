@@ -58,7 +58,7 @@ export default function HomePage() {
               <Icon name="github" />
               Follow on GitHub
             </Button>
-            <Button href={`${GH}/handbook`}>
+            <Button href="/handbook">
               <Icon name="note" />
               Read the handbook
             </Button>
