@@ -39,17 +39,25 @@ const sources: { icon: IconName; title: string; where: string }[] = [
   { icon: 'note', title: 'Notes', where: 'Obsidian, Apple Notes, Bear, Notion' },
 ]
 
-const versions: { v: string; title: string; text: string; now?: boolean }[] = [
+const versions: {
+  v: string
+  title: string
+  text: string
+  now?: boolean
+  status?: string
+}[] = [
   {
     v: 'v0.1',
     title: 'You use it',
     text: 'The format, the core, Knode Service, MCP, capture from Claude Code and Codex, a first Mac app.',
-    now: true,
+    status: 'Built',
   },
   {
     v: 'v0.2',
     title: 'Spaces',
     text: 'Several spaces, permissions per agent, every agent, a live Markdown folder.',
+    now: true,
+    status: 'In progress',
   },
   {
     v: 'v0.3',
@@ -300,6 +308,11 @@ export default function PlanPage() {
               className={`grid content-start gap-2 rounded-[14px] border bg-panel p-5 ${v.now ? 'border-indigo' : 'border-line'}`}
             >
               <span className="font-block text-[22px] leading-none text-accent">{v.v}</span>
+              {v.status && (
+                <span className="font-line text-[12px] leading-none text-muted uppercase">
+                  {v.status}
+                </span>
+              )}
               <b className="font-semibold">{v.title}</b>
               <p className="m-0 text-[14px] text-muted">{v.text}</p>
             </li>
