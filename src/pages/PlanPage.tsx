@@ -56,13 +56,14 @@ const versions: {
     v: 'v0.2',
     title: 'Spaces',
     text: 'Several spaces, permissions per agent, every agent, a live Markdown folder.',
-    now: true,
-    status: 'In progress',
+    status: 'Built',
   },
   {
     v: 'v0.3',
     title: 'Map',
     text: 'Graph and canvas, importers, semantic search, editing together.',
+    now: true,
+    status: 'In progress',
   },
   {
     v: 'v0.4',
