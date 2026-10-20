@@ -85,7 +85,7 @@ const card = 'rounded-[18px] border border-line bg-panel p-6'
 export default function PlanPage() {
   return (
     <>
-      <section className="mx-auto max-w-[1120px] px-6 pt-[clamp(40px,8vw,96px)]">
+      <section className="hero mx-auto max-w-[1120px] px-6 pt-[clamp(40px,8vw,96px)]">
         <p className="m-0 mb-6 font-line text-[15px] leading-[1.2] tracking-[.02em] text-accent uppercase">
           The plan
         </p>
@@ -151,7 +151,7 @@ export default function PlanPage() {
               </div>
             ))}
           </div>
-          <span className="justify-self-center font-line text-[12px] text-accent uppercase">
+          <span className="flow justify-self-center font-line text-[12px] text-accent uppercase">
             MCP
           </span>
           <div className="grid gap-3 rounded-[18px] border border-indigo bg-panel p-6">
@@ -164,7 +164,7 @@ export default function PlanPage() {
               that enforces permissions. The Mac app talks to it too.
             </p>
           </div>
-          <span className="justify-self-center font-line text-[12px] text-accent uppercase">
+          <span className="flow justify-self-center font-line text-[12px] text-accent uppercase">
             Opens
           </span>
           <div className="grid gap-2">
@@ -310,7 +310,8 @@ export default function PlanPage() {
             >
               <span className="font-block text-[22px] leading-none text-accent">{v.v}</span>
               {v.status && (
-                <span className="font-line text-[12px] leading-none text-muted uppercase">
+                <span className="inline-flex items-center gap-2 font-line text-[12px] leading-none text-muted uppercase">
+                  {v.now && <span className="now-dot" aria-hidden="true" />}
                   {v.status}
                 </span>
               )}

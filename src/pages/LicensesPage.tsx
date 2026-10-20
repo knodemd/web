@@ -46,7 +46,7 @@ const licenses: {
 export default function LicensesPage() {
   return (
     <>
-      <section className="mx-auto max-w-[1120px] px-6 pt-[clamp(40px,8vw,96px)]">
+      <section className="hero mx-auto max-w-[1120px] px-6 pt-[clamp(40px,8vw,96px)]">
         <p className="m-0 mb-6 font-line text-[15px] leading-[1.2] tracking-[.02em] text-accent uppercase">
           Licenses
         </p>

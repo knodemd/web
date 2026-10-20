@@ -1,8 +1,11 @@
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
+import { reveal } from '@/motion'
 import Footer from './Footer'
 import Navbar from './Navbar'
 
 export default function Layout({ children }: { children: ReactNode }) {
+  useEffect(reveal, [])
+
   return (
     <>
       <a

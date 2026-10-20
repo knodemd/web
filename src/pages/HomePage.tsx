@@ -42,7 +42,7 @@ export default function HomePage() {
   return (
     <>
       <section className="relative overflow-hidden pt-[clamp(40px,8vw,96px)] pb-[clamp(140px,22vw,260px)]">
-        <div className="relative z-10 mx-auto max-w-[1120px] px-6">
+        <div className="hero relative z-10 mx-auto max-w-[1120px] px-6">
           <p className="m-0 mb-6 font-line text-[15px] leading-[1.2] tracking-[.02em] text-accent uppercase">
             Open source. In early development.
           </p>
@@ -74,7 +74,7 @@ export default function HomePage() {
           alt=""
           width={1280}
           height={480}
-          className="pointer-events-none absolute right-0 -bottom-0.5 left-0 h-[clamp(120px,20vw,260px)] w-full object-cover object-top opacity-(--field-opacity)"
+          className="field pointer-events-none absolute right-0 -bottom-0.5 left-0 h-[clamp(120px,20vw,260px)] w-full object-cover object-top opacity-(--field-opacity)"
         />
       </section>
 
@@ -126,13 +126,18 @@ export default function HomePage() {
                 href={`https://github.com/${repo}`}
                 className="group flex flex-wrap justify-between gap-x-6 gap-y-2 border-b border-line py-5 no-underline"
               >
-                <span className="inline-flex items-center gap-2.5 font-mono font-medium group-hover:text-indigo">
+                <span className="inline-flex items-center gap-2.5 font-mono font-medium transition-[color,translate] duration-200 ease-out group-hover:translate-x-1 group-hover:text-indigo">
                   <span className="text-muted">
                     <Icon name="github" />
                   </span>
                   {repo}
                 </span>
-                <span className="text-muted">{what}</span>
+                <span className="inline-flex items-center gap-3 text-muted">
+                  {what}
+                  <span className="text-indigo opacity-0 transition-[opacity,translate] duration-200 ease-out group-hover:translate-x-0.5 group-hover:opacity-100 motion-reduce:transition-none">
+                    <Icon name="forward" />
+                  </span>
+                </span>
               </a>
             </li>
           ))}

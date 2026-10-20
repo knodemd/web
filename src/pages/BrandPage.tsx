@@ -77,7 +77,7 @@ const section = 'mx-auto max-w-[1120px] px-6 pt-[clamp(64px,9vw,112px)]'
 export default function BrandPage() {
   return (
     <>
-      <section className="mx-auto max-w-[1120px] px-6 pt-[clamp(40px,8vw,96px)]">
+      <section className="hero mx-auto max-w-[1120px] px-6 pt-[clamp(40px,8vw,96px)]">
         <p className="m-0 mb-6 font-line text-[15px] leading-[1.2] tracking-[.02em] text-accent uppercase">
           Brand
         </p>
