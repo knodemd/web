@@ -4,7 +4,8 @@
 #   sh scripts/test-install.sh
 #
 # The fake release has small shell scripts in place of the knode binary, so nothing is
-# downloaded from GitHub. `uname` is replaced to act as Linux or macOS on any arch.
+# downloaded from GitHub. `uname` is replaced to act as Linux or macOS on any arch, and
+# `ldd` and `getconf` to act as a musl system or as any glibc version.
 # Needs python3 for the server. Uses dash, bash, wget and shellcheck when they are installed.
 
 set -eu
@@ -37,6 +38,7 @@ make_release() {
   dir="$work/releases/download/v$version"
   mkdir -p "$dir"
   for target in x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu \
+    x86_64-unknown-linux-musl aarch64-unknown-linux-musl \
     x86_64-apple-darwin aarch64-apple-darwin; do
     stage="$work/stage/$version-$target"
     mkdir -p "$stage"
@@ -110,6 +112,33 @@ case "\${1:-}" in
 esac
 SH
 chmod 755 "$work/shims/uname"
+
+# ldd that acts like musl's (FAKE_LDD=musl) or glibc's (FAKE_LDD=2.31), or fails.
+cat > "$work/shims/ldd" <<'SH'
+#!/bin/sh
+case "${FAKE_LDD:-}" in
+  musl)
+    printf 'musl libc (x86_64)\nVersion 1.2.5\n' >&2
+    exit 1
+    ;;
+  "") exit 1 ;;
+  *) printf 'ldd (GNU libc) %s\nCopyright (C) Free Software Foundation, Inc.\n' "$FAKE_LDD" ;;
+esac
+SH
+chmod 755 "$work/shims/ldd"
+
+# getconf that reports glibc $FAKE_GLIBC, or fails as on musl.
+real_getconf="$(command -v getconf 2>/dev/null || echo false)"
+cat > "$work/shims/getconf" <<SH
+#!/bin/sh
+if [ "\${1:-}" = GNU_LIBC_VERSION ]; then
+  [ -n "\${FAKE_GLIBC:-}" ] || exit 1
+  echo "glibc \$FAKE_GLIBC"
+  exit 0
+fi
+exec "$real_getconf" "\$@"
+SH
+chmod 755 "$work/shims/getconf"
 
 # run NAME OS ARCH [VAR=value ...]: runs the installer into a fresh directory.
 run() {
@@ -189,6 +218,50 @@ for shell in sh dash bash; do
   if ! run os FreeBSD x86_64 && grep -q 'no knode build for FreeBSD' "$work/out"; then
     ok "fails clearly on an unsupported OS"
   else not_ok "fails clearly on an unsupported OS"; fi
+
+  if run musl Linux x86_64 FAKE_LDD=musl &&
+    [ "$("$dest/knode")" = "knode 0.2.0 x86_64-unknown-linux-musl" ]; then
+    ok "musl build on a musl system"
+  else not_ok "musl build on a musl system"; fi
+
+  if run old-glibc Linux aarch64 FAKE_GLIBC=2.31 FAKE_LDD=2.31 &&
+    [ "$("$dest/knode")" = "knode 0.2.0 aarch64-unknown-linux-musl" ]; then
+    ok "musl build on glibc 2.31"
+  else not_ok "musl build on glibc 2.31"; fi
+
+  if run old-glibc-ldd Linux x86_64 FAKE_LDD=2.17 &&
+    [ "$("$dest/knode")" = "knode 0.2.0 x86_64-unknown-linux-musl" ]; then
+    ok "musl build on glibc 2.17 found through ldd"
+  else not_ok "musl build on glibc 2.17 found through ldd"; fi
+
+  if run glibc-235 Linux x86_64 FAKE_GLIBC=2.35 FAKE_LDD=2.35 &&
+    [ "$("$dest/knode")" = "knode 0.2.0 x86_64-unknown-linux-gnu" ]; then
+    ok "gnu build on glibc 2.35"
+  else not_ok "gnu build on glibc 2.35"; fi
+
+  if run glibc-240 Linux aarch64 FAKE_GLIBC=2.40 &&
+    [ "$("$dest/knode")" = "knode 0.2.0 aarch64-unknown-linux-gnu" ]; then
+    ok "gnu build on glibc 2.40"
+  else not_ok "gnu build on glibc 2.40"; fi
+
+  if run libc-gnu Linux x86_64 FAKE_LDD=musl KNODE_LIBC=gnu &&
+    [ "$("$dest/knode")" = "knode 0.2.0 x86_64-unknown-linux-gnu" ]; then
+    ok "KNODE_LIBC=gnu picks the gnu build"
+  else not_ok "KNODE_LIBC=gnu picks the gnu build"; fi
+
+  if run libc-musl Linux x86_64 FAKE_GLIBC=2.39 KNODE_LIBC=musl &&
+    [ "$("$dest/knode")" = "knode 0.2.0 x86_64-unknown-linux-musl" ]; then
+    ok "KNODE_LIBC=musl picks the musl build"
+  else not_ok "KNODE_LIBC=musl picks the musl build"; fi
+
+  if ! run libc-bad Linux x86_64 KNODE_LIBC=uclibc && grep -q 'KNODE_LIBC must be gnu or musl' "$work/out" &&
+    [ ! -e "$dest/knode" ]; then
+    ok "rejects an unknown KNODE_LIBC"
+  else not_ok "rejects an unknown KNODE_LIBC"; fi
+
+  if run mac-libc Darwin arm64 KNODE_LIBC=musl && [ "$("$dest/knode")" = "knode 0.2.0 aarch64-apple-darwin" ]; then
+    ok "KNODE_LIBC does not change the macOS build"
+  else not_ok "KNODE_LIBC does not change the macOS build"; fi
 
   mkdir -p "$work/readonly"
   chmod 555 "$work/readonly"
