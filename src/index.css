@@ -244,3 +244,173 @@ body {
     scroll-behavior: auto;
   }
 }
+
+/* Motion. Calm and short: things arrive, they don't perform. Only transform and opacity move,
+   everything eases out, and with reduced motion nothing moves at all. The page reads the same
+   without JavaScript: only the scroll reveal needs it, and it hides nothing until it runs. */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+@keyframes ink {
+  from {
+    color: var(--fg);
+  }
+}
+@keyframes band {
+  from {
+    background-size: 0% 100%;
+  }
+}
+@keyframes field-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+@keyframes drift {
+  to {
+    translate: 0 48px;
+  }
+}
+@keyframes flow {
+  to {
+    background-position-x: 8px;
+  }
+}
+@keyframes pulse {
+  from {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+/* The live version in the roadmap: an indigo dot with a slow ring. */
+.now-dot {
+  position: relative;
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-indigo);
+}
+.now-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  opacity: 0;
+}
+
+/* The connections in "How it works": a row of dots, half a cell round, under the label. */
+.flow {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+.flow::after {
+  content: '';
+  display: none;
+  width: 48px;
+  height: 4px;
+  background: radial-gradient(circle, var(--color-indigo) 1.5px, transparent 2px) 0 50% / 8px 4px
+    repeat-x;
+}
+@media (min-width: 768px) {
+  .flow::after {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* The first screen of a page: eyebrow, headline, text and buttons, one after another. */
+  .hero > * {
+    animation: rise 0.8s var(--ease-out) both;
+  }
+  .hero > :nth-child(2) {
+    animation-delay: 70ms;
+  }
+  .hero > :nth-child(3) {
+    animation-delay: 180ms;
+  }
+  .hero > :nth-child(n + 4) {
+    animation-delay: 260ms;
+  }
+  /* then the highlight settles: indigo on ink, the band drawn under it on paper */
+  .hero .highlight {
+    animation: ink 0.9s ease 0.55s both;
+  }
+  .field {
+    animation: field-in 1.6s var(--ease-out) 0.2s both;
+  }
+  @supports (animation-timeline: scroll()) {
+    .field {
+      animation:
+        field-in 1.6s var(--ease-out) 0.2s both,
+        drift linear both;
+      animation-timeline: auto, scroll();
+      animation-range:
+        normal,
+        0 100vh;
+    }
+  }
+
+  /* Scroll reveal, set up by src/motion.ts once the page is interactive. */
+  html[data-motion] [data-reveal]:not([data-shown]) {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  html[data-motion] [data-reveal] {
+    transition:
+      opacity 0.6s ease var(--delay, 0ms),
+      transform 0.8s var(--ease-out) var(--delay, 0ms);
+  }
+
+  .flow::after {
+    animation: flow 0.9s linear infinite;
+  }
+  .now-dot::after {
+    animation: pulse 2.4s var(--ease-out) infinite;
+  }
+  .pop {
+    animation: pop 0.3s var(--ease-out);
+  }
+
+  /* Moving between pages: the bar stays, the page crossfades. */
+  @view-transition {
+    navigation: auto;
+  }
+  header {
+    view-transition-name: navbar;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.25s;
+  }
+}
+@media (prefers-color-scheme: light) {
+  .highlight {
+    background-repeat: no-repeat;
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (prefers-color-scheme: light) {
+  .hero .highlight {
+    animation: band 0.7s var(--ease-out) 0.55s both;
+  }
+}

@@ -106,7 +106,12 @@ function Code({ children }: { children: string }) {
         aria-label={`Copy ${children}`}
         className="inline-flex h-9 shrink-0 cursor-pointer items-center gap-2 rounded-lg border border-line bg-panel px-2.5 text-[13px] sm:px-3 font-medium text-muted transition hover:border-muted hover:text-fg"
       >
-        <Icon name={state === 'copied' ? 'done' : 'note'} />
+        <span
+          key={state === 'copied' ? 'done' : 'copy'}
+          className={state === 'copied' ? 'pop' : ''}
+        >
+          <Icon name={state === 'copied' ? 'done' : 'note'} />
+        </span>
         <span aria-live="polite" className="sr-only sm:not-sr-only">
           {state === 'copied' ? 'Copied' : state === 'selected' ? 'Selected' : 'Copy'}
         </span>
@@ -156,7 +161,7 @@ function Card({
 export default function InstallPage() {
   return (
     <>
-      <section className="mx-auto max-w-[1120px] px-6 pt-[clamp(40px,8vw,96px)]">
+      <section className="hero mx-auto max-w-[1120px] px-6 pt-[clamp(40px,8vw,96px)]">
         <p className="m-0 mb-6 font-line text-[15px] leading-[1.2] tracking-[.02em] text-accent uppercase">
           Install
         </p>

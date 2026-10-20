@@ -1,9 +1,10 @@
 import Button from '@/components/Button'
+import CellScreen from '@/components/CellScreen'
 import Icon from '@/components/Icon'
 
 export default function NotFoundPage() {
   return (
-    <section className="mx-auto max-w-[1120px] px-6 pt-[clamp(40px,8vw,96px)] pb-[clamp(80px,14vw,160px)]">
+    <section className="hero mx-auto max-w-[1120px] px-6 pt-[clamp(40px,8vw,96px)] pb-[clamp(80px,14vw,160px)]">
       <p className="m-0 mb-6 font-line text-[15px] leading-[1.2] tracking-[.02em] text-accent uppercase">
         Error 404
       </p>
@@ -21,6 +22,7 @@ export default function NotFoundPage() {
           Back to knode.md
         </Button>
       </div>
+      <CellScreen className="mt-[clamp(48px,8vw,96px)] aspect-[34/18] w-full max-w-[560px]" />
     </section>
   )
 }
