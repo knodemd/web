@@ -11,6 +11,8 @@
 #   KNODE_VERSION       Version to install, for example 0.2.0 (default: the latest release)
 #   KNODE_INSTALL_DIR   Where to put knode (default: ~/.local/bin)
 #   KNODE_USE_SUDO      Set to 1 to use sudo when the install directory is not writable
+#   KNODE_LIBC          On Linux, gnu or musl to pick that build (default: musl on musl
+#                       systems such as Alpine and on glibc older than 2.35, else gnu)
 #   KNODE_RELEASES_URL  Where releases are downloaded from
 #                       (default: https://github.com/knodemd/knode/releases)
 #
@@ -42,6 +44,8 @@ Settings, as environment variables:
   KNODE_VERSION       Version to install, for example 0.2.0 (default: the latest release)
   KNODE_INSTALL_DIR   Where to put knode (default: ~/.local/bin)
   KNODE_USE_SUDO      Set to 1 to use sudo when the install directory is not writable
+  KNODE_LIBC          On Linux, gnu or musl to pick that build (default: musl on musl
+                      systems such as Alpine and on glibc older than 2.35, else gnu)
   KNODE_RELEASES_URL  Where releases are downloaded from
                       (default: https://github.com/knodemd/knode/releases)
 USAGE
@@ -98,10 +102,8 @@ detect_target() {
 
   case "$os" in
     Linux)
-      if is_musl; then
-        fail "there is no knode build for musl-based Linux (such as Alpine) yet, only for glibc"
-      fi
-      printf '%s\n' "$arch-unknown-linux-gnu"
+      libc="$(linux_libc)" || exit 1
+      printf '%s\n' "$arch-unknown-linux-$libc"
       ;;
     Darwin)
       # A shell running under Rosetta reports x86_64 on Apple silicon.
@@ -112,6 +114,48 @@ detect_target() {
       ;;
     *) fail "there is no knode build for $os yet (Linux and macOS are supported)" ;;
   esac
+}
+
+# The oldest glibc the gnu builds run on: they are built on Ubuntu 22.04.
+GLIBC_MIN_MAJOR=2
+GLIBC_MIN_MINOR=35
+
+# Which Linux build to use: gnu, or the static musl build on musl systems and on glibc
+# older than the gnu builds need. KNODE_LIBC picks one by hand.
+linux_libc() {
+  case "${KNODE_LIBC:-}" in
+    gnu | musl)
+      printf '%s\n' "$KNODE_LIBC"
+      return
+      ;;
+    "") ;;
+    *) fail "KNODE_LIBC must be gnu or musl, not '$KNODE_LIBC'" ;;
+  esac
+  if is_musl; then
+    printf 'musl\n'
+    return
+  fi
+  glibc="$(glibc_version)"
+  if [ -n "$glibc" ]; then
+    major="${glibc%%.*}"
+    minor="${glibc#*.}"
+    minor="${minor%%.*}"
+    if [ "$major" -lt "$GLIBC_MIN_MAJOR" ] ||
+      { [ "$major" -eq "$GLIBC_MIN_MAJOR" ] && [ "$minor" -lt "$GLIBC_MIN_MINOR" ]; }; then
+      printf 'musl\n'
+      return
+    fi
+  fi
+  printf 'gnu\n'
+}
+
+# The glibc version, such as 2.35, or nothing when it cannot be found.
+glibc_version() {
+  version="$(getconf GNU_LIBC_VERSION 2>/dev/null | sed -n 's/^glibc \([0-9][0-9]*\.[0-9][0-9]*\).*/\1/p')"
+  if [ -z "$version" ] && command -v ldd >/dev/null 2>&1; then
+    version="$(ldd --version 2>/dev/null | sed -n '1s/.* \([0-9][0-9]*\.[0-9][0-9]*\)$/\1/p')"
+  fi
+  printf '%s\n' "$version"
 }
 
 is_musl() {
