@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react'
 
-const CODE = '[[memory]]  { node: "thought", links: [] }  search(context)  .knode  01  <>  + '
-const GLYPHS = '.:+*#[]{}01'
+// Use only glyphs in the existing pixel-grid brand font, avoiding fallback punctuation.
+const CODE = 'MEMORY: NODE("THOUGHT"); LINKS: 01; SEARCH(CONTEXT); .KNODE / '
+const LIVE_GLYPHS = '01KNODEMEMORYSEARCH:;=/0101'
 
 // A quiet field of code. Pointer energy decays per cell, leaving a short indigo wake.
 // The hero owns the pointer events so the canvas never intercepts links or text selection.
@@ -25,17 +26,20 @@ export default function AsciiField() {
     let ink = ''
     let accent = ''
     let font = ''
+    let palette: string[] = []
     let frame = 0
     let previous = 0
+    let animationTime = 0
     let visible = false
     let pointer: { x: number; y: number } | null = null
-    const stepX = 16
-    const stepY = 24
+    let lastPointer: { x: number; y: number } | null = null
+    const stepX = 12
+    const stepY = 16
     const field = new Image()
 
     function paint() {
       ctx!.clearRect(0, 0, width, height)
-      ctx!.font = `600 15px ${font}`
+      ctx!.font = `400 16px ${font}`
       ctx!.textAlign = 'center'
       ctx!.textBaseline = 'middle'
       for (let row = 0; row < rows; row++) {
@@ -44,21 +48,23 @@ export default function AsciiField() {
           const value = energy[index] ?? 0
           const node = (shape[index * 4 + 3] ?? 0) / 255
           const character = CODE.charAt((col + row * 19) % CODE.length)
-          ctx!.fillStyle = ink
-          ctx!.globalAlpha = 0.19 + ((col * 7 + row * 13) % 5) * 0.025 + node * 0.28
-          ctx!.fillText(character, (col + 0.5) * stepX, (row + 0.5) * stepY)
-          if (value > 0.01) {
-            ctx!.fillStyle = accent
-            ctx!.globalAlpha = value * 0.12
-            ctx!.beginPath()
-            ctx!.roundRect(col * stepX + 1, row * stepY + 2, stepX - 2, stepY - 4, 2)
-            ctx!.fill()
-            ctx!.globalAlpha = Math.min(1, value * 1.35)
-            ctx!.fillText(
-              value > 0.6 ? GLYPHS.charAt((col * 3 + row * 7) % GLYPHS.length) : character,
-              (col + 0.5) * stepX,
-              (row + 0.5) * stepY,
-            )
+          ctx!.fillStyle = palette[Math.round(value * 127)] ?? ink
+          const opacity = Math.min(1, 0.16 + node * 0.25 + value * 0.8)
+          const x = (col + 0.5) * stepX
+          const y = (row + 0.5) * stepY
+          const blend = character === ' ' ? 0 : Math.min(1, Math.max(0, (value - 0.06) / 0.45))
+          ctx!.globalAlpha = opacity * (1 - blend)
+          ctx!.fillText(character, x, y)
+          if (blend > 0) {
+            // Stagger the changes so the wake ripples instead of flashing as one block.
+            const seed = col * 17 + row * 31
+            const phase = animationTime / (150 + (seed % 5) * 25) + seed * 0.37
+            const cycle = Math.floor(phase)
+            const crossfade = Math.min(1, (phase - cycle) / 0.4)
+            ctx!.globalAlpha = opacity * blend * (1 - crossfade)
+            ctx!.fillText(LIVE_GLYPHS.charAt((seed + cycle) % LIVE_GLYPHS.length), x, y)
+            ctx!.globalAlpha = opacity * blend * crossfade
+            ctx!.fillText(LIVE_GLYPHS.charAt((seed + cycle + 1) % LIVE_GLYPHS.length), x, y)
           }
         }
       }
@@ -73,9 +79,15 @@ export default function AsciiField() {
 
     function tick(now: number) {
       frame = 0
+      // Character changes need a live clock, but thirty frames per second is ample here.
+      if (previous && now - previous < 1000 / 30) {
+        frame = requestAnimationFrame(tick)
+        return
+      }
       const elapsed = previous ? Math.min(now - previous, 64) : 16
       previous = now
-      const decay = Math.exp(-elapsed / 420)
+      animationTime += elapsed
+      const decay = Math.exp(-elapsed / 500)
       let active = false
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
@@ -83,16 +95,23 @@ export default function AsciiField() {
           const before = energy[index] ?? 0
           let value = before * decay
           if (pointer) {
-            const distance = Math.hypot(
-              (col + 0.5) * stepX - pointer.x,
-              (row + 0.5) * stepY - pointer.y,
-            )
-            value = Math.max(value, Math.max(0, 1 - distance / 200) ** 1.35)
+            // Illuminate the whole movement segment, so quick gestures leave no gaps.
+            const start = lastPointer ?? pointer
+            const dx = pointer.x - start.x
+            const dy = pointer.y - start.y
+            const x = (col + 0.5) * stepX - start.x
+            const y = (row + 0.5) * stepY - start.y
+            const length = dx * dx + dy * dy
+            const along = length ? Math.max(0, Math.min(1, (x * dx + y * dy) / length)) : 0
+            const distanceSquared = (x - along * dx) ** 2 + (y - along * dy) ** 2
+            const target = Math.exp(-distanceSquared / (2 * 65 ** 2))
+            if (target > value) value += (target - value) * (1 - Math.exp(-elapsed / 45))
           }
           energy[index] = value > 0.01 ? value : 0
-          if (Math.abs(energy[index]! - before) > 0.0001) active = true
+          if (energy[index]! > 0.06 || Math.abs(energy[index]! - before) > 0.0001) active = true
         }
       }
+      lastPointer = pointer
       paint()
       if (active && !motion.matches && visible && !document.hidden)
         frame = requestAnimationFrame(tick)
@@ -118,7 +137,17 @@ export default function AsciiField() {
       const css = getComputedStyle(canvas!)
       ink = css.getPropertyValue('--muted').trim()
       accent = css.getPropertyValue('--color-indigo').trim()
-      font = css.getPropertyValue('--font-mono').trim()
+      font = css.getPropertyValue('--font-line').trim()
+      const rgb = (hex: string) =>
+        [1, 3, 5].map((offset) => parseInt(hex.slice(offset, offset + 2), 16))
+      const from = rgb(ink)
+      const to = rgb(accent)
+      palette = Array.from({ length: 128 }, (_, i) => {
+        const channels = from.map((channel, j) =>
+          Math.round(channel + (to[j]! - channel) * (i / 127)),
+        )
+        return `rgb(${channels.join(',')})`
+      })
       if (field.complete && field.naturalWidth) {
         // Sample the existing brand illustration on the same grid as the code. The nodes
         // emerge from the characters rather than sitting on top as a separate SVG layer.
@@ -144,12 +173,14 @@ export default function AsciiField() {
 
     function leave() {
       pointer = null
+      lastPointer = null
       wake()
     }
 
     function reset() {
       stop()
       pointer = null
+      lastPointer = null
       resize()
     }
 
@@ -175,7 +206,7 @@ export default function AsciiField() {
     document.addEventListener('visibilitychange', visibility)
     // Repaint with the local font once it is available, without keeping an animation running.
     let disposed = false
-    void document.fonts.ready.then(() => {
+    void document.fonts.load('16px "Knode Line"').then(() => {
       if (!disposed) paint()
     })
 
