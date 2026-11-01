@@ -1,5 +1,6 @@
 import Button from '@/components/Button'
 import Icon from '@/components/Icon'
+import AsciiField from '@/components/AsciiField'
 import type { IconName } from '@/brand/icons'
 
 const GH = 'https://github.com/knodemd'
@@ -42,6 +43,7 @@ export default function HomePage() {
   return (
     <>
       <section className="relative overflow-hidden pt-[clamp(40px,8vw,96px)] pb-[clamp(140px,22vw,260px)]">
+        <AsciiField />
         <div className="hero relative z-10 mx-auto max-w-[1120px] px-6">
           <p className="m-0 mb-6 font-line text-[15px] leading-[1.2] tracking-[.02em] text-accent uppercase">
             Open source. In early development.
@@ -85,16 +87,24 @@ export default function HomePage() {
       >
         <h2
           id="h-what"
-          className="m-0 mb-8 font-line text-[15px] leading-none font-normal text-muted uppercase"
+          className="principles-heading m-0 mb-8 font-line text-[15px] leading-none font-normal text-muted uppercase"
         >
           What we're building
         </h2>
-        <ul className="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(min(100%,240px),1fr))] gap-4 p-0">
-          {principles.map((p) => (
-            <li key={p.title} className="rounded-[18px] border border-line bg-panel p-7">
-              <span className="text-accent">
-                <Icon name={p.icon} className="size-7" />
-              </span>
+        <ul className="m-0 grid list-none grid-cols-1 gap-4 p-0 min-[560px]:grid-cols-2 lg:grid-cols-4">
+          {principles.map((p, index) => (
+            <li
+              key={p.title}
+              className="principle-card rounded-[18px] border border-line bg-panel p-7"
+            >
+              <div className="flex items-center justify-between">
+                <span className="principle-icon inline-flex text-accent">
+                  <Icon name={p.icon} className="size-7" />
+                </span>
+                <span aria-hidden="true" className="font-line text-[12px] text-muted">
+                  0{index + 1}
+                </span>
+              </div>
               <h3 className="mt-[22px] mb-2 font-block text-[26px] leading-none font-normal uppercase">
                 {p.title}
               </h3>
