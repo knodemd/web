@@ -84,6 +84,24 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+
+/* Keep the code field quiet behind the copy and visible in the hero's open space. */
+.ascii-field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mask-image: linear-gradient(to right, rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.4) 48%, #000 85%);
+}
+[data-ascii-ready] > .field {
+  visibility: hidden;
+}
+@media (max-width: 640px) {
+  .ascii-field {
+    mask-image: linear-gradient(to bottom, transparent 35%, #000);
+  }
+}
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;

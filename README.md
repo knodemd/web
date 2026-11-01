@@ -13,6 +13,7 @@ come from [knodemd/brand](https://github.com/knodemd/brand).
 |---|---|
 | `src/pages/` | The landing page and the 404 |
 | `src/components/` | Navbar (sticky), footer, buttons, icons, logo |
+| `src/components/AsciiField.tsx` | Pointer-reactive code field on the landing hero; static with reduced motion, paused off screen and in hidden tabs |
 | `src/brand/` | Icon and logo data copied from the brand kit |
 | `src/index.css` | Tailwind, the three inks and both themes |
 | `scripts/prerender.mjs` | Writes `index.html` and `404.html` as real HTML after the build |

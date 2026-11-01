@@ -1,5 +1,6 @@
 import Button from '@/components/Button'
 import Icon from '@/components/Icon'
+import AsciiField from '@/components/AsciiField'
 import type { IconName } from '@/brand/icons'
 
 const GH = 'https://github.com/knodemd'
@@ -42,6 +43,7 @@ export default function HomePage() {
   return (
     <>
       <section className="relative overflow-hidden pt-[clamp(40px,8vw,96px)] pb-[clamp(140px,22vw,260px)]">
+        <AsciiField />
         <div className="hero relative z-10 mx-auto max-w-[1120px] px-6">
           <p className="m-0 mb-6 font-line text-[15px] leading-[1.2] tracking-[.02em] text-accent uppercase">
             Open source. In early development.
