@@ -18,6 +18,7 @@ come from [knodemd/brand](https://github.com/knodemd/brand).
 | `scripts/prerender.mjs` | Writes `index.html` and `404.html` as real HTML after the build |
 | `public/` | Fonts, favicons, link preview, `CNAME`, `robots.txt`, `sitemap.xml` |
 | `public/install.sh` | The installer served at `https://knode.md/install.sh`, tested by `sh scripts/test-install.sh` |
+| `scripts/releases.mjs` | Fetches published GitHub release notes at build time for `/changelog`; drafts are omitted and notes are sorted newest first |
 
 ## Run it locally
 
@@ -27,6 +28,12 @@ npm run dev       # http://localhost:5173
 npm run build     # type-check, build and prerender into dist/
 npm run preview   # serve dist/
 ```
+
+`npm test` checks release-note filtering, ordering, pagination and failure handling. The site
+refreshes published release notes on its daily build or a manual deployment. Visitors make no
+GitHub API requests and remote images in notes are not automatically loaded. For an offline
+build, set `RELEASES_FILE` to a local GitHub releases JSON array; `GITHUB_TOKEN`, when provided,
+is used only by the build script and is never written to site data.
 
 ## Contributing
 
