@@ -7,3 +7,4 @@ dist-ssr
 src/content/handbook.json
 .docs
 src/content/docs.json
+src/content/releases.json

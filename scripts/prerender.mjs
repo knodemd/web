@@ -20,6 +20,13 @@ const template = readFileSync(path.join(dist, 'index.html'), 'utf8')
 const pages = [
   { page: 'home', file: 'index.html' },
   {
+    page: 'changelog',
+    file: 'changelog/index.html',
+    title: 'Changelog - Knode',
+    description:
+      'Release notes for Knode, newest first: the app, command line and shared memory for your agents.',
+  },
+  {
     page: 'brand',
     file: 'brand/index.html',
     title: 'Brand - Knode',
