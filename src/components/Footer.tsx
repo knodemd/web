@@ -12,6 +12,7 @@ const columns: { title: string; links: { label: string; href: string; icon: Icon
       { label: 'Built in public', href: '/#public', icon: 'people' },
       { label: 'The plan', href: '/plan', icon: 'map' },
       { label: 'Install', href: '/install', icon: 'import' },
+      { label: 'Changelog', href: '/changelog', icon: 'history' },
       { label: 'Developers', href: '/developers', icon: 'terminal' },
     ],
   },

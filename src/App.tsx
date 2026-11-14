@@ -1,4 +1,5 @@
 import Layout from '@/components/Layout'
+import ChangelogPage from '@/pages/ChangelogPage'
 import BrandPage from '@/pages/BrandPage'
 import DevelopersPage from '@/pages/DevelopersPage'
 import DocsPage from '@/pages/DocsPage'
@@ -15,6 +16,7 @@ import NotFoundPage from '@/pages/NotFoundPage'
 // A docs page is 'docs' plus its slug: 'docs', 'docs/install'.
 export type Page =
   | 'home'
+  | 'changelog'
   | 'brand'
   | 'developers'
   | 'install'
@@ -28,6 +30,7 @@ const routes: Record<string, Page> = {
   '/handbook': 'handbook',
   '/docs': 'docs',
   '/': 'home',
+  '/changelog': 'changelog',
   '/brand': 'brand',
   '/developers': 'developers',
   '/install': 'install',
@@ -60,6 +63,8 @@ export default function App({ page }: { page: Page }) {
         <DocsPage slug={page.replace(/^docs\/?/, '')} />
       ) : page === 'home' ? (
         <HomePage />
+      ) : page === 'changelog' ? (
+        <ChangelogPage />
       ) : page === 'brand' ? (
         <BrandPage />
       ) : page === 'developers' ? (

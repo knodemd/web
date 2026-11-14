@@ -175,6 +175,12 @@ export default function InstallPage() {
           and as a Mac app. The command is enough to give every agent a shared memory; the app lets
           you see and organise it.
         </p>
+        <p className="mt-4 text-sm text-muted">
+          <a className="link-text" href="/changelog">
+            Read the release notes
+          </a>{' '}
+          before updating.
+        </p>
 
         <div
           role="status"
