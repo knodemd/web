@@ -84,6 +84,91 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+
+/* An almost-solid ink surface keeps the navigation crisp without a frosted strip. A flat
+   1px line appears once content scrolls underneath. */
+.site-header {
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 300ms ease;
+}
+.site-header[data-scrolled] {
+  border-bottom-color: var(--line);
+}
+
+.principles-heading {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.principles-heading::after {
+  content: '';
+  height: 1px;
+  flex: 1;
+  background: var(--line);
+  transform-origin: left;
+}
+.principle-card {
+  position: relative;
+  overflow: hidden;
+  transition: border-color 250ms ease;
+}
+.principle-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 28px;
+  right: 28px;
+  height: 2px;
+  background: var(--color-indigo);
+  opacity: 0.65;
+  transform-origin: left;
+}
+.principle-card:hover {
+  border-color: color-mix(in srgb, var(--color-indigo) 45%, var(--line));
+}
+
+/* Keep the code field quiet behind the copy and visible in the hero's open space. */
+.ascii-field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mask-image:
+    linear-gradient(to right, rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.4) 48%, #000 85%),
+    linear-gradient(to bottom, #000 45%, rgb(0 0 0 / 0.8) 65%, rgb(0 0 0 / 0.3) 85%, transparent);
+  mask-composite: intersect;
+}
+.field {
+  mask-image: linear-gradient(to bottom, #000, transparent);
+}
+[data-ascii-ready] > .field {
+  visibility: hidden;
+}
+@media (max-width: 640px) {
+  .ascii-field {
+    mask-image: linear-gradient(to bottom, transparent 20%, #000 55%, transparent);
+  }
+}
+@keyframes field-scroll-fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .ascii-field {
+      animation: field-scroll-fade linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+  }
+}
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
@@ -339,6 +424,27 @@ body {
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  .principle-icon {
+    transition: translate 400ms var(--ease-out);
+  }
+  .principle-card:hover .principle-icon {
+    translate: 0 -4px;
+  }
+  html[data-motion] .principles-heading::after,
+  html[data-motion] .principle-card::before {
+    transition: transform 900ms var(--ease-out) var(--delay, 0ms);
+  }
+  /* The cards rise in with the shared scroll reveal; keep their hover border transition too. */
+  html[data-motion] .principle-card[data-reveal] {
+    transition:
+      opacity 0.6s ease var(--delay, 0ms),
+      transform 0.8s var(--ease-out) var(--delay, 0ms),
+      border-color 250ms ease;
+  }
+  html[data-motion] .principles-heading[data-reveal]:not([data-shown])::after,
+  html[data-motion] .principle-card[data-reveal]:not([data-shown])::before {
+    transform: scaleX(0);
+  }
   /* The first screen of a page: eyebrow, headline, text and buttons, one after another. */
   .hero > * {
     animation: rise 0.8s var(--ease-out) both;

@@ -3,7 +3,7 @@ import Icon from './Icon'
 import { Logo } from './Logo'
 
 export default function Navbar() {
-  // the bar gets a border once the page has scrolled under it
+  // A quiet surface at the top; a little more definition as content moves underneath.
   const [scrolled, setScrolled] = useState(false)
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -13,11 +13,7 @@ export default function Navbar() {
   }, [])
 
   return (
-    <header
-      className={`sticky top-0 z-50 border-b bg-bg/85 backdrop-blur-md transition-colors ${
-        scrolled ? 'border-line' : 'border-transparent'
-      }`}
-    >
+    <header className="site-header sticky top-0 z-50" data-scrolled={scrolled ? '' : undefined}>
       <div className="mx-auto flex h-[72px] max-w-[1120px] items-center justify-between gap-4 px-6">
         <a href="/" aria-label="Knode, home" className="text-fg">
           <Logo className="h-[22px] sm:h-[26px]" />
