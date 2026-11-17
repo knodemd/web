@@ -5,11 +5,18 @@
 #
 # It downloads the archive for this system from the Knode release on GitHub, checks it
 # against the release's SHA256SUMS and puts `knode` in ~/.local/bin. It never asks for
-# root unless you set KNODE_USE_SUDO=1.
+# root unless you set KNODE_USE_SUDO=1. On a Mac, Homebrew and the Knode app install
+# `knode` too.
+#
+# Options:
+#   --prefix DIR        Put knode in DIR/bin instead of ~/.local/bin
+#   -h, --help          Show this help
+#
+# For example: curl -fsSL https://knode.md/install.sh | sh -s -- --prefix /opt/knode
 #
 # Settings, as environment variables:
 #   KNODE_VERSION       Version to install, for example 0.2.0 (default: the latest release)
-#   KNODE_INSTALL_DIR   Where to put knode (default: ~/.local/bin)
+#   KNODE_INSTALL_DIR   Where to put knode (default: ~/.local/bin); --prefix wins over it
 #   KNODE_USE_SUDO      Set to 1 to use sudo when the install directory is not writable
 #   KNODE_LIBC          On Linux, gnu or musl to pick that build (default: musl on musl
 #                       systems such as Alpine and on glibc older than 2.35, else gnu)
@@ -39,10 +46,15 @@ usage() {
 Install the knode command from its GitHub release.
 
   curl -fsSL https://knode.md/install.sh | sh
+  curl -fsSL https://knode.md/install.sh | sh -s -- --prefix /opt/knode
+
+Options:
+  --prefix DIR        Put knode in DIR/bin instead of ~/.local/bin
+  -h, --help          Show this help
 
 Settings, as environment variables:
   KNODE_VERSION       Version to install, for example 0.2.0 (default: the latest release)
-  KNODE_INSTALL_DIR   Where to put knode (default: ~/.local/bin)
+  KNODE_INSTALL_DIR   Where to put knode (default: ~/.local/bin); --prefix wins over it
   KNODE_USE_SUDO      Set to 1 to use sudo when the install directory is not writable
   KNODE_LIBC          On Linux, gnu or musl to pick that build (default: musl on musl
                       systems such as Alpine and on glibc older than 2.35, else gnu)
@@ -76,15 +88,18 @@ latest_tag() {
     case "$url" in
       https://*) final="$(curl --proto '=https' --tlsv1.2 -fsSL --retry 3 -o /dev/null -w '%{url_effective}' "$url")" ;;
       *) final="$(curl -fsSL --retry 3 -o /dev/null -w '%{url_effective}' "$url")" ;;
-    esac
+    esac || fail "could not reach $url"
   elif command -v wget >/dev/null 2>&1; then
     final="$(wget -q -S -O /dev/null "$url" 2>&1 | sed -n 's/^ *[Ll]ocation: *//p' | tail -n 1 | tr -d '\r')"
   else
     fail "this script needs curl or wget"
   fi
+  final="${final%/}"
   tag="${final##*/}"
   case "$tag" in
     v[0-9]*) printf '%s\n' "$tag" ;;
+    # Without a published release, GitHub sends /releases/latest to the list of releases.
+    releases) fail "no Knode release is published yet; see $RELEASES_URL" ;;
     *) fail "could not find the latest release at $url (set KNODE_VERSION to pick one)" ;;
   esac
 }
@@ -199,14 +214,28 @@ path_advice() {
 }
 
 main() {
-  case "${1:-}" in
-    -h | --help)
-      usage
-      exit 0
-      ;;
-    "") ;;
-    *) fail "unknown option '$1' (settings are environment variables, see --help)" ;;
-  esac
+  prefix=""
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      -h | --help)
+        usage
+        exit 0
+        ;;
+      --prefix)
+        if [ "$#" -lt 2 ] || [ -z "$2" ]; then
+          fail "--prefix needs a directory"
+        fi
+        prefix="$2"
+        shift 2
+        ;;
+      --prefix=*)
+        prefix="${1#--prefix=}"
+        [ -n "$prefix" ] || fail "--prefix needs a directory"
+        shift
+        ;;
+      *) fail "unknown option '$1' (see --help)" ;;
+    esac
+  done
 
   need uname
   need tar
@@ -214,7 +243,11 @@ main() {
 
   RELEASES_URL="${KNODE_RELEASES_URL:-https://github.com/knodemd/knode/releases}"
   RELEASES_URL="${RELEASES_URL%/}"
-  install_dir="${KNODE_INSTALL_DIR:-${HOME:?HOME is not set}/.local/bin}"
+  if [ -n "$prefix" ]; then
+    install_dir="${prefix%/}/bin"
+  else
+    install_dir="${KNODE_INSTALL_DIR:-${HOME:?HOME is not set}/.local/bin}"
+  fi
 
   target="$(detect_target)"
 
@@ -240,8 +273,15 @@ main() {
   trap 'exit 130' INT
   trap 'exit 143' TERM
 
+  case "$target" in
+    *-apple-darwin)
+      say "on a Mac, Homebrew keeps knode up to date: brew install knodemd/tap/knode"
+      say "the Knode app includes knode too: brew install --cask knodemd/tap/knode, or https://knode.md"
+      ;;
+  esac
   say "installing knode ${tag#v} for $target"
-  download "$base/$asset" "$tmp/$asset" || fail "could not download $base/$asset"
+  download "$base/$asset" "$tmp/$asset" ||
+    fail "could not download $base/$asset; check that ${tag#v} is a published release at $RELEASES_URL"
   download "$base/SHA256SUMS" "$tmp/SHA256SUMS" || fail "could not download $base/SHA256SUMS"
 
   expected="$(awk -v f="$asset" '{ n = $2; sub(/^\*/, "", n) } n == f { print $1; exit }' "$tmp/SHA256SUMS")"
@@ -262,7 +302,10 @@ main() {
       sudo=sudo
       $sudo mkdir -p "$install_dir"
     else
-      fail "cannot write to $install_dir; pick another with KNODE_INSTALL_DIR, or set KNODE_USE_SUDO=1"
+      if [ -n "$prefix" ]; then
+        fail "cannot write to $install_dir; pick another --prefix, or set KNODE_USE_SUDO=1"
+      fi
+      fail "cannot write to $install_dir; pick another with KNODE_INSTALL_DIR or --prefix, or set KNODE_USE_SUDO=1"
     fi
   fi
 
