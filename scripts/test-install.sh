@@ -60,13 +60,22 @@ awk '{ print "0000000000000000000000000000000000000000000000000000000000000000  
   "$work/releases/download/v0.0.9/SHA256SUMS" > "$work/sums"
 mv "$work/sums" "$work/releases/download/v0.0.9/SHA256SUMS"
 
-# A server like GitHub: /releases/latest redirects to /releases/tag/v0.2.0.
+# A server like GitHub: /releases/latest redirects to /releases/tag/v0.2.0. Under /empty,
+# a repository with no published release: /empty/releases/latest redirects to the list.
 cat > "$work/server.py" <<'PY'
 import http.server, os, sys
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
-        if self.path.rstrip("/") == "/releases/latest":
+        if self.path.rstrip("/") == "/empty/releases/latest":
+            self.send_response(302)
+            self.send_header("Location", "/empty/releases")
+            self.end_headers()
+        elif self.path.rstrip("/") == "/empty/releases":
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"no releases")
+        elif self.path.rstrip("/") == "/releases/latest":
             self.send_response(302)
             self.send_header("Location", "/releases/tag/v0.2.0")
             self.end_headers()
@@ -99,6 +108,7 @@ while [ ! -s "$work/port" ]; do
   sleep 0.1
 done
 releases="http://127.0.0.1:$(cat "$work/port")/releases"
+empty="http://127.0.0.1:$(cat "$work/port")/empty/releases"
 
 # uname that reports $FAKE_OS and $FAKE_ARCH.
 mkdir -p "$work/shims"
@@ -140,6 +150,16 @@ exec "$real_getconf" "\$@"
 SH
 chmod 755 "$work/shims/getconf"
 
+# with_args NAME OS ARCH ARG...: runs the installer with command-line arguments, from a fresh
+# home and without KNODE_INSTALL_DIR.
+with_args() {
+  name="$1" os="$2" arch="$3"
+  shift 3
+  rm -rf "${work:?}/home" "${work:?}/prefix-$name"
+  env PATH="$work/shims:$PATH" FAKE_OS="$os" FAKE_ARCH="$arch" HOME="$work/home" \
+    SHELL=/bin/zsh KNODE_RELEASES_URL="$releases" "$shell" "$script" "$@" > "$work/out" 2>&1
+}
+
 # run NAME OS ARCH [VAR=value ...]: runs the installer into a fresh directory.
 run() {
   name="$1" os="$2" arch="$3"
@@ -173,6 +193,52 @@ for shell in sh dash bash; do
   if run mac-arm Darwin arm64 && [ "$("$dest/knode")" = "knode 0.2.0 aarch64-apple-darwin" ]; then
     ok "latest release on macOS Apple silicon"
   else not_ok "latest release on macOS Apple silicon"; fi
+
+  if run mac-pointer Darwin arm64 && grep -q 'brew install knodemd/tap/knode' "$work/out" &&
+    grep -q 'brew install --cask knodemd/tap/knode' "$work/out"; then
+    ok "points to Homebrew and the Mac app on macOS"
+  else not_ok "points to Homebrew and the Mac app on macOS"; fi
+
+  if run linux-no-pointer Linux x86_64 && ! grep -q 'brew install' "$work/out"; then
+    ok "no Homebrew pointer on Linux"
+  else not_ok "no Homebrew pointer on Linux"; fi
+
+  if ! run no-release Linux x86_64 KNODE_RELEASES_URL="$empty" &&
+    grep -q 'no Knode release is published yet' "$work/out" && [ ! -e "$dest/knode" ]; then
+    ok "fails clearly when no release is published yet"
+  else not_ok "fails clearly when no release is published yet"; fi
+
+  if with_args prefix Linux x86_64 --prefix "$work/prefix-prefix" &&
+    [ "$("$work/prefix-prefix/bin/knode")" = "knode 0.2.0 x86_64-unknown-linux-gnu" ] &&
+    [ ! -e "$work/home/.local/bin/knode" ]; then
+    ok "--prefix DIR installs to DIR/bin"
+  else not_ok "--prefix DIR installs to DIR/bin"; fi
+
+  if with_args prefix-eq Linux aarch64 "--prefix=$work/prefix-prefix-eq/" &&
+    [ "$("$work/prefix-prefix-eq/bin/knode")" = "knode 0.2.0 aarch64-unknown-linux-gnu" ]; then
+    ok "--prefix=DIR/ installs to DIR/bin"
+  else not_ok "--prefix=DIR/ installs to DIR/bin"; fi
+
+  if with_args prefix-wins Linux x86_64 --prefix "$work/prefix-prefix-wins" &&
+    [ -x "$work/prefix-prefix-wins/bin/knode" ] &&
+    env PATH="$work/shims:$PATH" FAKE_OS=Linux FAKE_ARCH=x86_64 HOME="$work/home" \
+      KNODE_RELEASES_URL="$releases" KNODE_INSTALL_DIR="$work/other" \
+      "$shell" "$script" --prefix "$work/prefix-prefix-wins" > "$work/out" 2>&1 &&
+    [ ! -e "$work/other/knode" ]; then
+    ok "--prefix wins over KNODE_INSTALL_DIR"
+  else not_ok "--prefix wins over KNODE_INSTALL_DIR"; fi
+
+  if ! with_args prefix-empty Linux x86_64 --prefix && grep -q -- '--prefix needs a directory' "$work/out"; then
+    ok "--prefix without a directory fails"
+  else not_ok "--prefix without a directory fails"; fi
+
+  if ! with_args unknown Linux x86_64 --frobnicate && grep -q "unknown option '--frobnicate'" "$work/out"; then
+    ok "rejects an unknown option"
+  else not_ok "rejects an unknown option"; fi
+
+  if with_args help Linux x86_64 --help && grep -q -- '--prefix DIR' "$work/out"; then
+    ok "--help lists --prefix"
+  else not_ok "--help lists --prefix"; fi
 
   if run mac-intel Darwin x86_64 && [ "$("$dest/knode")" = "knode 0.2.0 x86_64-apple-darwin" ] ||
     [ "$(sysctl -n sysctl.proc_translated 2>/dev/null || echo 0)" = 1 ]; then
@@ -296,6 +362,12 @@ if command -v wget >/dev/null 2>&1; then
     [ "$("$dest/knode")" = "knode 0.2.0 x86_64-unknown-linux-gnu" ]; then
     ok "latest release through wget"
   else not_ok "latest release through wget"; fi
+
+  if ! env PATH="$nocurl" FAKE_OS=Linux FAKE_ARCH=x86_64 HOME="$work/home" \
+    KNODE_RELEASES_URL="$empty" KNODE_INSTALL_DIR="$work/bin-wget-empty" \
+    sh "$script" > "$work/out" 2>&1 && grep -q 'no Knode release is published yet' "$work/out"; then
+    ok "no release yet, through wget"
+  else not_ok "no release yet, through wget"; fi
 fi
 
 if command -v shellcheck >/dev/null 2>&1; then
