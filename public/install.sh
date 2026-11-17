@@ -222,7 +222,9 @@ main() {
         exit 0
         ;;
       --prefix)
-        [ "$#" -ge 2 ] && [ -n "$2" ] || fail "--prefix needs a directory"
+        if [ "$#" -lt 2 ] || [ -z "$2" ]; then
+          fail "--prefix needs a directory"
+        fi
         prefix="$2"
         shift 2
         ;;
