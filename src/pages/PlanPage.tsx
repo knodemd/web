@@ -67,10 +67,15 @@ const versions: {
   },
   {
     v: 'v0.4',
+    title: 'Capture life',
+    text: 'Chats, mail, meetings and messages arrive by themselves, on the device.',
+  },
+  {
+    v: 'v0.5',
     title: 'Sync and iPhone',
     text: 'iCloud and Knode Cloud, end-to-end encrypted. The iPhone and iPad app.',
   },
-  { v: 'v0.5', title: 'Collaboration', text: 'Links, shared and team spaces, the web app.' },
+  { v: 'v0.6', title: 'Collaboration', text: 'Links, shared and team spaces, the web app.' },
   { v: 'v1.0', title: 'Launch', text: 'Everything polished, the format 1.0 published.' },
 ]
 
