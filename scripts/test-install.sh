@@ -335,6 +335,12 @@ for shell in sh dash bash; do
     grep -q 'KNODE_USE_SUDO=1' "$work/out"; then
     ok "does not use sudo when the directory is not writable"
   else not_ok "does not use sudo when the directory is not writable"; fi
+
+  if ! with_args readonly-prefix Linux x86_64 --prefix "$work/readonly/opt" &&
+    grep -q 'pick another --prefix, or set KNODE_USE_SUDO=1' "$work/out" &&
+    ! grep -q 'KNODE_INSTALL_DIR' "$work/out"; then
+    ok "an unwritable --prefix suggests another --prefix"
+  else not_ok "an unwritable --prefix suggests another --prefix"; fi
   chmod 755 "$work/readonly"
 
   if run default-dir Linux x86_64 KNODE_INSTALL_DIR= &&

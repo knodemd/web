@@ -302,7 +302,10 @@ main() {
       sudo=sudo
       $sudo mkdir -p "$install_dir"
     else
-      fail "cannot write to $install_dir; pick another with KNODE_INSTALL_DIR, or set KNODE_USE_SUDO=1"
+      if [ -n "$prefix" ]; then
+        fail "cannot write to $install_dir; pick another --prefix, or set KNODE_USE_SUDO=1"
+      fi
+      fail "cannot write to $install_dir; pick another with KNODE_INSTALL_DIR or --prefix, or set KNODE_USE_SUDO=1"
     fi
   fi
 
