@@ -11,7 +11,7 @@ const later: { icon: IconName; title: string; where: ReactNode; when: string }[]
     icon: 'node',
     title: 'iPhone and iPad',
     where: 'From the App Store.',
-    when: 'v0.4',
+    when: 'v0.5',
   },
   {
     icon: 'web',
@@ -21,7 +21,7 @@ const later: { icon: IconName; title: string; where: ReactNode; when: string }[]
         At <span className="font-mono text-[.92em] text-fg">app.knode.md</span>.
       </>
     ),
-    when: 'v0.5',
+    when: 'v0.6',
   },
   {
     icon: 'code',
