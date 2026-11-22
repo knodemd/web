@@ -94,6 +94,14 @@ export default function Footer() {
             <Icon name="license" />
             Licenses
           </a>
+          <a href="/privacy" className="link-nav inline-flex items-center gap-2">
+            <Icon name="private" />
+            Privacy
+          </a>
+          <a href="/terms" className="link-nav inline-flex items-center gap-2">
+            <Icon name="note" />
+            Terms
+          </a>
           <a
             href="mailto:oss@knode.md"
             className="link-nav inline-flex items-center gap-2 font-mono text-[13px]"

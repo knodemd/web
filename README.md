@@ -12,6 +12,7 @@ come from [knodemd/brand](https://github.com/knodemd/brand).
 | Path | What |
 |---|---|
 | `src/pages/` | The landing page and the 404 |
+| `src/content/legal.ts` | The privacy policy (`/privacy`) and terms (`/terms`); a draft notice shows until the owners mark them reviewed |
 | `src/components/` | Navbar (sticky), footer, buttons, icons, logo |
 | `src/components/AsciiField.tsx` | Pointer-reactive code field on the landing hero; static with reduced motion, paused off screen and in hidden tabs |
 | `src/brand/` | Icon and logo data copied from the brand kit |

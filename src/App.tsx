@@ -6,9 +6,11 @@ import DocsPage from '@/pages/DocsPage'
 import HandbookPage from '@/pages/HandbookPage'
 import HomePage from '@/pages/HomePage'
 import InstallPage from '@/pages/InstallPage'
+import LegalPage from '@/pages/LegalPage'
 import LicensesPage from '@/pages/LicensesPage'
 import PlanPage from '@/pages/PlanPage'
 import { docsPages } from '@/content/docs'
+import { privacy, terms } from '@/content/legal'
 import { handbookPages } from '@/content/handbook'
 import NotFoundPage from '@/pages/NotFoundPage'
 
@@ -21,6 +23,8 @@ export type Page =
   | 'developers'
   | 'install'
   | 'licenses'
+  | 'privacy'
+  | 'terms'
   | 'plan'
   | 'not-found'
   | `handbook${string}`
@@ -35,6 +39,8 @@ const routes: Record<string, Page> = {
   '/developers': 'developers',
   '/install': 'install',
   '/licenses': 'licenses',
+  '/privacy': 'privacy',
+  '/terms': 'terms',
   '/plan': 'plan',
 }
 
@@ -75,6 +81,10 @@ export default function App({ page }: { page: Page }) {
         <PlanPage />
       ) : page === 'licenses' ? (
         <LicensesPage />
+      ) : page === 'privacy' ? (
+        <LegalPage doc={privacy} />
+      ) : page === 'terms' ? (
+        <LegalPage doc={terms} />
       ) : (
         <NotFoundPage />
       )}
