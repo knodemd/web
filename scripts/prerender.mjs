@@ -60,6 +60,20 @@ const pages = [
     description:
       'Knode is open source under Apache 2.0. Its name and logo are reserved under the Knode Brand License.',
   },
+  {
+    page: 'privacy',
+    file: 'privacy/index.html',
+    title: 'Privacy policy - Knode',
+    description:
+      'Knode runs on your device: no Knode account, no analytics, and no Knode server receives your notes, mail or messages.',
+  },
+  {
+    page: 'terms',
+    file: 'terms/index.html',
+    title: 'Terms of use - Knode',
+    description:
+      'The terms for knode.md and the builds of Knode, including the services its connectors sign in to.',
+  },
   ...handbook.pages.map((p) => ({
     page: p.slug ? `handbook/${p.slug}` : 'handbook',
     file: p.slug ? `handbook/${p.slug}/index.html` : 'handbook/index.html',
